@@ -6,8 +6,9 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12 pull-right">
+        <div class="col-md-12">
             <a href="{{ URL::action('CompanyController@create') }}" class="btn btn-info">Nuova Società</a>
+            <a href="{{ URL::action('CompanyController@bin') }}" class="btn btn-info">Recycle Bin</a>
         </div>
     </div>
     <table class="table table-inverse" id="companiesTable">
@@ -58,8 +59,10 @@
                         {{ $company->city->name }}
                     </td>
                     <td>
-                        <a href="{{ URL::action('CompanyController@edit', $company->id) }}">Modifica</a>
-                        <a href="{{ URL::action('CompanyController@destroy', $company->id) }}">Cancella</a>
+                        {{ Form::open(array('route' => array('companies.destroy', $company->id), 'method' => 'delete')) }}
+                            <a href="{{ URL::action('CompanyController@edit', $company->id) }}" class="btn btn-warning">Modifica</a>
+                            <button type="submit" class="btn btn-danger">Cancella</button>
+                        {{ Form::close() }}
                     </td>
                 </tr>
             @endforeach

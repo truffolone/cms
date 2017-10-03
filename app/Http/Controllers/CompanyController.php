@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\EchoCity;
 use App\EchoCountry;
-use Illuminate\Http\Request;
 use Khsing\World\Models\Country;
 use App\Http\Requests\CreateCompanyFormRequest;
 use App\Http\Requests\UpdateCompanyFormRequest;
@@ -77,6 +76,20 @@ class CompanyController extends Controller
     }
 
     /**
+     * Recycle bin for the companies
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function bin()
+    {
+        $companies = Company::onlyTrashed()->with('city')->with('country')->orderBy('name')->get();
+
+        $ret = ['companies' => $companies];
+
+        return view('companies.bin', $ret);
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  \App\Company  $company
@@ -141,7 +154,28 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company)
     {
-        //
+        $company->delete();
+
+        return redirect()
+            ->action('CompanyController@index')
+            ->with('message', 'Company ' . $company->name . ' successfully deleted!');
+    }
+
+    /**
+     * Restores a company from the recylce bin
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function restore(int $id)
+    {
+        $company = Company::onlyTrashed()->find($id);
+
+        $company->restore();
+
+        return redirect()
+            ->action('CompanyController@index')
+            ->with('message', 'Company ' . $company->name . ' successfully restored!');
     }
 
     /**

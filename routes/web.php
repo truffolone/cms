@@ -16,3 +16,9 @@ Route::get('/', function () {
 });
 
 Route::resource('companies', 'CompanyController');
+
+/*
+ * Recycle Bin
+ */
+Route::get('bin/companies', 'CompanyController@bin');
+Route::get('bin/companies/restore/{company}', 'CompanyController@restore');
