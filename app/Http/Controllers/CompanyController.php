@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Company;
 use App\EchoCity;
 use App\EchoCountry;
-use Khsing\World\Models\Country;
 use App\Http\Requests\CreateCompanyFormRequest;
 use App\Http\Requests\UpdateCompanyFormRequest;
 
@@ -185,7 +184,7 @@ class CompanyController extends Controller
      */
     private function _getLocationJson()
     {
-        $countries = Country::with('cities')->get()->sortBy('name');
+        $countries = EchoCountry::with('cities')->get()->sortBy('name');
         $array = array('country' => []);
         foreach($countries as $country)
         {

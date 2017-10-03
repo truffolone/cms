@@ -8,6 +8,11 @@ class EchoCity extends City
 {
     public function companies()
     {
-        return $this->hasMany('App\Companies');
+        return $this->hasMany('App\Company');
+    }
+
+    public function users()
+    {
+        return $this->hasMany('App\User');
     }
 }

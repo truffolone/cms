@@ -2,17 +2,37 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
     /**
      * Gets the user info data from
      */
     function userInfo()
     {
-        $this->hasOne('App\UserInfo');
+        return $this->hasOne('App\UserInfo');
+    }
+
+    /**
+     * Binds to country
+     */
+    function country()
+    {
+        return $this->belongsTo('App\EchoCountry');
+    }
+
+    /**
+     * Bind to city
+     */
+    function city()
+    {
+        return $this->belongsTo('App\EchoCity');
     }
 
     /**
