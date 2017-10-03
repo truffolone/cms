@@ -2,7 +2,7 @@
 
 namespace App;
 
-use \Khsing\World\Models\Country;
+use Khsing\World\Models\Country;
 
 class EchoCountry extends Country
 {

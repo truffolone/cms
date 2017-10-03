@@ -36,8 +36,8 @@ class CompanyController extends Controller
 
         //generating array with data to show
         $dataArray = array(
-            'company'    => $company,
-            'locations'  => $this->_getLocationJson()
+            'company' => $company,
+            'locations' => $this->_getLocationJson()
         );
 
         //calling the view
@@ -45,21 +45,52 @@ class CompanyController extends Controller
     }
 
     /**
+     * Returns a JSON string with cities/countries
+     *
+     * @return string
+     */
+    private function _getLocationJson()
+    {
+        $countries = EchoCountry::with('cities')->get()->sortBy('name');
+        $array = array('country' => []);
+        foreach ($countries as $country) {
+            $cityArray = array();
+
+            foreach ($country->cities as $city) {
+                $cityArray[] = ['id' => $city->id, 'name' => $city->name];
+            }
+
+            //sorting array based on name
+            usort($cityArray, function ($a, $b) {
+                return $a['name'] > $b['name'];
+            });
+
+            $array['country'][] = [
+                'name' => $country->name,
+                'id' => $country->id,
+                'cities' => $cityArray
+            ];
+        }
+
+        return json_encode($array);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\CreateCompanyFormRequest  $request
+     * @param  \App\Http\Requests\CreateCompanyFormRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateCompanyFormRequest $request)
     {
         $company = new Company;
-        $company->name      = $request->input('name');
-        $company->address   = $request->input('address');
-        $company->zip_code  = $request->input('zip_code');
+        $company->name = $request->input('name');
+        $company->address = $request->input('address');
+        $company->zip_code = $request->input('zip_code');
         $company->telephone = $request->input('telephone');
-        $company->fax       = $request->input('fax');
-        $company->email     = $request->input('email');
-        $company->url       = $request->input('url');
+        $company->fax = $request->input('fax');
+        $company->email = $request->input('email');
+        $company->url = $request->input('url');
 
         $country = EchoCountry::find($request->input('country_id'));
         $company->country()->associate($country);
@@ -70,8 +101,8 @@ class CompanyController extends Controller
         $company->save();
 
         return redirect()
-                    ->action('CompanyController@index')
-                    ->with('message', 'Company ' . $request->input('name') . ' successfully created!');
+            ->action('CompanyController@index')
+            ->with('message', 'Company ' . $request->input('name') . ' successfully created!');
     }
 
     /**
@@ -91,7 +122,7 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Company  $company
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function show(Company $company)
@@ -102,14 +133,14 @@ class CompanyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Company  $company
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function edit(Company $company)
     {
         $ret = array(
             'company' => $company,
-            'locations'  => $this->_getLocationJson()
+            'locations' => $this->_getLocationJson()
         );
 
         return view('companies.edit', $ret);
@@ -118,19 +149,19 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateCompanyFormRequest  $request
-     * @param  \App\Company  $company
+     * @param  \App\Http\Requests\UpdateCompanyFormRequest $request
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateCompanyFormRequest $request, Company $company)
     {
-        $company->name      = $request->input('name');
-        $company->address   = $request->input('address');
-        $company->zip_code  = $request->input('zip_code');
+        $company->name = $request->input('name');
+        $company->address = $request->input('address');
+        $company->zip_code = $request->input('zip_code');
         $company->telephone = $request->input('telephone');
-        $company->fax       = $request->input('fax');
-        $company->email     = $request->input('email');
-        $company->url       = $request->input('url');
+        $company->fax = $request->input('fax');
+        $company->email = $request->input('email');
+        $company->url = $request->input('url');
 
         $country = EchoCountry::find($request->input('country_id'));
         $company->country()->associate($country);
@@ -148,7 +179,7 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Company  $company
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function destroy(Company $company)
@@ -175,38 +206,5 @@ class CompanyController extends Controller
         return redirect()
             ->action('CompanyController@index')
             ->with('message', 'Company ' . $company->name . ' successfully restored!');
-    }
-
-    /**
-     * Returns a JSON string with cities/countries
-     *
-     * @return string
-     */
-    private function _getLocationJson()
-    {
-        $countries = EchoCountry::with('cities')->get()->sortBy('name');
-        $array = array('country' => []);
-        foreach($countries as $country)
-        {
-            $cityArray = array();
-
-            foreach($country->cities as $city)
-            {
-                $cityArray[] = ['id' => $city->id, 'name' => $city->name];
-            }
-
-            //sorting array based on name
-            usort($cityArray, function($a, $b) {
-                return $a['name'] > $b['name'];
-            });
-
-            $array['country'][] = [
-                'name'   => $country->name,
-                'id'     => $country->id,
-                'cities' => $cityArray
-            ];
-        }
-
-        return json_encode($array);
     }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\EchoCity;
 use App\EchoCountry;
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -33,68 +32,12 @@ class UserController extends Controller
 
         //generating array with data to show
         $dataArray = array(
-            'company'    => $company,
-            'locations'  => $this->_getLocationJson()
+            'company' => $company,
+            'locations' => $this->_getLocationJson()
         );
 
         //calling the view
         return view('companies.create', $dataArray);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     /**
@@ -106,27 +49,81 @@ class UserController extends Controller
     {
         $countries = EchoCountry::with('cities')->get()->sortBy('name');
         $array = array('country' => []);
-        foreach($countries as $country)
-        {
+        foreach ($countries as $country) {
             $cityArray = array();
 
-            foreach($country->cities as $city)
-            {
+            foreach ($country->cities as $city) {
                 $cityArray[] = ['id' => $city->id, 'name' => $city->name];
             }
 
             //sorting array based on name
-            usort($cityArray, function($a, $b) {
+            usort($cityArray, function ($a, $b) {
                 return $a['name'] > $b['name'];
             });
 
             $array['country'][] = [
-                'name'   => $country->name,
-                'id'     => $country->id,
+                'name' => $country->name,
+                'id' => $country->id,
                 'cities' => $cityArray
             ];
         }
 
         return json_encode($array);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }

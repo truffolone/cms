@@ -66,8 +66,9 @@
                 </td>
                 <td>
                     {{ Form::open(array('route' => array('users.destroy', $company->id), 'method' => 'delete')) }}
-                        <a href="{{ URL::action('UserController@edit', $company->id) }}" class="btn btn-warning">Modifica</a>
-                        <button type="submit" class="btn btn-danger">Cancella</button>
+                    <a href="{{ URL::action('UserController@edit', $company->id) }}"
+                       class="btn btn-warning">Modifica</a>
+                    <button type="submit" class="btn btn-danger">Cancella</button>
                     {{ Form::close() }}
                 </td>
             </tr>
@@ -105,13 +106,13 @@
     <link rel="stylesheet" type="text/css" href="{{asset('DataTables/datatables.min.css')}}"/>
     <script type="text/javascript" src="{{asset('DataTables/datatables.min.js')}}"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#usersTable').DataTable( {
-                "order": [[ 0, "desc" ]],
+        $(document).ready(function () {
+            $('#usersTable').DataTable({
+                "order": [[0, "desc"]],
                 buttons: [
                     'copy', 'excel', 'pdf'
                 ]
-            } );
-        } );
+            });
+        });
     </script>
 @endsection

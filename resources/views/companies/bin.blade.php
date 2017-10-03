@@ -90,13 +90,13 @@
     <link rel="stylesheet" type="text/css" href="{{asset('DataTables/datatables.min.css')}}"/>
     <script type="text/javascript" src="{{asset('DataTables/datatables.min.js')}}"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
-            $('#companiesTable').DataTable( {
-                "order": [[ 0, "desc" ]],
+        $(document).ready(function () {
+            $('#companiesTable').DataTable({
+                "order": [[0, "desc"]],
                 buttons: [
                     'copy', 'excel', 'pdf'
                 ]
-            } );
-        } );
+            });
+        });
     </script>
 @endsection

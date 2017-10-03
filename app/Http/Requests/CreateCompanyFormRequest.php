@@ -24,10 +24,10 @@ class CreateCompanyFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'       => 'required|max:255',
-            'email'      => 'required|email',
+            'name' => 'required|max:255',
+            'email' => 'required|email',
             'country_id' => 'required|integer',
-            'city_id'    => 'required|integer'
+            'city_id' => 'required|integer'
         ];
     }
 }

@@ -63,38 +63,32 @@
         var preselectedCityId = {{ $company->city_id }};
 
         $.each(locationJson.country, function (index, value) {
-            if(value.id == preselectedCountryId)
-            {
-                $("#country_id").append('<option value="'+value.id+'" selected="selected">'+value.name+'</option>');
+            if (value.id == preselectedCountryId) {
+                $("#country_id").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
                 preselectedCountryId = 0;
             }
-            else
-            {
-                $("#country_id").append('<option value="'+value.id+'">'+value.name+'</option>');
+            else {
+                $("#country_id").append('<option value="' + value.id + '">' + value.name + '</option>');
             }
         });
 
-        $('#country_id').on('change', function(){
+        $('#country_id').on('change', function () {
             setupCity($(this).val());
         });
 
         setupCity(preselectedCountryId);
 
         function setupCity(countryId) {
-            for(var i = 0; i < locationJson.country.length; i++)
-            {
-                if(locationJson.country[i].id == countryId)
-                {
+            for (var i = 0; i < locationJson.country.length; i++) {
+                if (locationJson.country[i].id == countryId) {
                     $('#city_id').html('');
                     $.each(locationJson.country[i].cities, function (index, value) {
-                        if(value.id == preselectedCityId)
-                        {
-                            $("#city_id").append('<option value="'+value.id+'" selected="selected">'+value.name+'</option>');
+                        if (value.id == preselectedCityId) {
+                            $("#city_id").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
                             preselectedCityId = 0;
                         }
-                        else
-                        {
-                            $("#city_id").append('<option value="'+value.id+'">'+value.name+'</option>');
+                        else {
+                            $("#city_id").append('<option value="' + value.id + '">' + value.name + '</option>');
                         }
                     });
                 }
