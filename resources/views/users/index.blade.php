@@ -36,6 +36,9 @@
                 Provincia
             </th>
             <th>
+                Società
+            </th>
+            <th>
                 Azioni
             </th>
         </tr>
@@ -59,14 +62,17 @@
                     {{ $user->userInfo->last_name }}
                 </td>
                 <td>
-                    {{ $company->country->name }}
+                    {{ $user->country->name }}
                 </td>
                 <td>
-                    {{ $company->city->name }}
+                    {{ $user->city->name }}
                 </td>
                 <td>
-                    {{ Form::open(array('route' => array('users.destroy', $company->id), 'method' => 'delete')) }}
-                    <a href="{{ URL::action('UserController@edit', $company->id) }}"
+                    {{ $companyName }}
+                </td>
+                <td>
+                    {{ Form::open(array('route' => array('users.destroy', $user->id), 'method' => 'delete')) }}
+                    <a href="{{ URL::action('UserController@edit', $user->id) }}"
                        class="btn btn-warning">Modifica</a>
                     <button type="submit" class="btn btn-danger">Cancella</button>
                     {{ Form::close() }}
@@ -80,19 +86,25 @@
                 #
             </th>
             <th>
-                Nome Società
+                Username
             </th>
             <th>
                 Email
             </th>
             <th>
-                Telefono
+                Nome
+            </th>
+            <th>
+                Cognome
             </th>
             <th>
                 Nazione
             </th>
             <th>
                 Provincia
+            </th>
+            <th>
+                Società
             </th>
             <th>
                 Azioni

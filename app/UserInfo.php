@@ -11,22 +11,6 @@ class UserInfo extends Model
      */
     function user()
     {
-        $this->belongsTo('App\User');
-    }
-
-    /**
-     *  Inverse Relationship with Company
-     */
-    function company()
-    {
-        $this->belongsTo('App\Company');
-    }
-
-    /**
-     * Inverse Relationship with world cities
-     */
-    function city()
-    {
-        $this->belongsTo('App\City');
+        return $this->belongsTo('App\User');
     }
 }

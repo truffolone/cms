@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\EchoCity;
 use App\EchoCountry;
 use App\User;
+use App\Company;
+use App\UserInfo;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreNewUser;
 
 class UserController extends Controller
 {
@@ -15,9 +19,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('country')->with('city')->with('userInfo')->with('companies')->get();
+        $users = User::with('country')
+                            ->with('city')
+                            ->with('userInfo')
+                            ->with('companies')
+                            ->get();
 
-        return view('users.index', ['users' => $users]);
+        $companyName = "-";
+        if(property_exists('companies', $users))
+        {
+            $companyName = $users->companies->first();
+        }
+
+        return view('users.index', ['users' => $users, 'companyName' => $companyName]);
     }
 
     /**
@@ -33,11 +47,12 @@ class UserController extends Controller
         //generating array with data to show
         $dataArray = array(
             'company' => $company,
-            'locations' => $this->_getLocationJson()
+            'locations' => $this->_getLocationJson(),
+            'companies' => Company::orderBy('name')->get()
         );
 
         //calling the view
-        return view('companies.create', $dataArray);
+        return view('users.create', $dataArray);
     }
 
     /**
@@ -74,12 +89,66 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\StoreNewUser $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreNewUser $request)
     {
-        //
+        //Password Hashing
+        $password = $request->input('password') ?
+                        sodium_crypto_pwhash_str($request->input('password'),
+                                            SODIUM_CRYPTO_PWHASH_OPSLIMIT_INTERACTIVE,
+                                           SODIUM_CRYPTO_PWHASH_MEMLIMIT_INTERACTIVE) : null;
+
+        //Binding User Values
+        $user = new User;
+        $user->email    = $request->input('email');
+        $user->username = $request->input('username');
+        $user->password = $password;
+        $user->question = $request->input('question');
+        $user->answer   = $request->input('answer');
+
+        //Country
+        if($request->input('country_id'))
+        {
+            $country = EchoCountry::find($request->input('country_id'));
+            $user->country()->associate($country);
+        }
+
+        //City
+        if($request->input('city_id'))
+        {
+            $city = EchoCity::find($request->input('city_id'));
+            $user->city()->associate($city);
+        }
+
+        //Company
+        if($request->input('company_id'))
+        {
+            $company = Company::find($request->input('company_id'));
+            $user->companies()->attach($company);
+        }
+
+        $user->save();
+
+        //User Infos Added Data
+        $userInfo = new UserInfo;
+        $userInfo->address     = $request->input('address');
+        $userInfo->zip_code    = $request->input('zip_code');
+        $userInfo->piva        = $request->input('piva');
+        $userInfo->more_info   = $request->input('more_info');
+        $userInfo->telephone   = $request->input('telephone');
+        $userInfo->cellphone   = $request->input('cellphone');
+        $userInfo->fax         = $request->input('fax');
+        $userInfo->first_name  = $request->input('first_name');
+        $userInfo->middle_name = $request->input('middle_name');
+        $userInfo->last_name   = $request->input('last_name');
+        $userInfo->user()->associate($user);
+        $userInfo->save();
+
+        return redirect()
+            ->action('UserController@index')
+            ->with('message', 'User ' . $request->input('username') . ' successfully created!');
     }
 
     /**
