@@ -42,4 +42,12 @@ class User extends Model
     {
         return $this->belongsToMany('App\Company')->withPivot('valid_until')->withTimestamps();
     }
+
+    /**
+     * load last active company
+     */
+    public function lastActiveCompany()
+    {
+        return $this->belongsToMany('App\Company')->latest()->where('valid_to IS NULL');
+    }
 }

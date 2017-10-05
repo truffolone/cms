@@ -65,7 +65,6 @@
         $.each(locationJson.country, function (index, value) {
             if (value.id == preselectedCountryId) {
                 $("#country_id").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
-                preselectedCountryId = 0;
             }
             else {
                 $("#country_id").append('<option value="' + value.id + '">' + value.name + '</option>');
@@ -85,6 +84,7 @@
                     $.each(locationJson.country[i].cities, function (index, value) {
                         if (value.id == preselectedCityId) {
                             $("#city_id").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
+                            preselectedCountryId = 0;
                             preselectedCityId = 0;
                         }
                         else {

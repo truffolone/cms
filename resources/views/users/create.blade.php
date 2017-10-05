@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {!! Form::model($company, ['action' => 'UserController@store']) !!}
+    {!! Form::model($user, ['action' => 'UserController@store']) !!}
         <div id="tabs">
             <ul>
                 <li><a href="#tabs-loginInfo">Login Info (required)</a></li>
