@@ -24,16 +24,17 @@ class UserController extends Controller
         $users = User::with('country')
                             ->with('city')
                             ->with('userInfo')
-                            ->with('companies')
+                            /*->with(['companies' => function($q){
+                                $q->where("id", function($l) {
+                                    $l->from('company_user as sub')
+                                        ->selectRaw('max(id)')
+                                        ->whereRaw('company_user.user_id = sub.user_id');
+                                });
+                            }])*/
+                            ->with('lastActiveCompany')
                             ->get();
 
-        $companyName = "-";
-        if(property_exists('companies', $users))
-        {
-            $companyName = $users->companies->first();
-        }
-
-        return view('users.index', ['users' => $users, 'companyName' => $companyName]);
+        return view('users.index', ['users' => $users]);
     }
 
     /**
@@ -175,7 +176,13 @@ class UserController extends Controller
         $user = User::with('country')
                     ->with('city')
                     ->with('userInfo')
-                    ->with('companies')
+                    ->with(['companies' => function($q){
+                        $q->where("id", function($l) {
+                            $l->from('company_user as sub')
+                                ->selectRaw('max(id)')
+                                ->whereRaw('company_user.user_id = sub.user_id');
+                        });
+                    }])
                     ->find($id);
 
         return view('users.edit', ['user' => $user,

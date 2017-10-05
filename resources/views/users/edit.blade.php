@@ -97,7 +97,7 @@
 
             <div class="form-group">
                 {!! Form::label('company_id', 'Società') !!}
-                {!! Form::select('company_id', $companies, null, ['class' => 'form-control', 'placeholder' => 'Seleziona una Società di Appartenenza']) !!}
+                {!! Form::select('company_id', $companies, $user->companies->first()->id, ['class' => 'form-control', 'placeholder' => 'Seleziona una Società di Appartenenza']) !!}
             </div>
         </div>
 

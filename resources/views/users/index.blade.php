@@ -68,7 +68,7 @@
                     {{ $user->city->name }}
                 </td>
                 <td>
-                    {{ $companyName }}
+                    {{ $user->lastActiveCompany->name }}
                 </td>
                 <td>
                     {{ Form::open(array('route' => array('users.destroy', $user->id), 'method' => 'delete')) }}
